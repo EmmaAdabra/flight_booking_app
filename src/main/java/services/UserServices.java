@@ -1,11 +1,11 @@
 package services;
 
+import dao.SQLExecutionException;
 import dao.UserDAO;
 import models.User;
 import utils.ObjectResponse;
 import utils.Response;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +27,9 @@ public class UserServices implements IUserServices {
             } else {
                 response.createResponse(response, false, "User couldn't be created");
             }
-        } catch (SQLException e){
+        } catch (SQLExecutionException e){
             response.setStatus(false);
-            response.setMessage("Database  error: " + e.getMessage());
+            response.setMessage("Database query error: " + e.getMessage());
         }
         return response;
     }
@@ -47,8 +47,8 @@ public class UserServices implements IUserServices {
             } else {
                 response.createResponse(response, false, "No users found");
             }
-        } catch (SQLException e) {
-            response.createResponse(response, false, "Database  error: " + e.getMessage());
+        } catch (SQLExecutionException e) {
+            response.createResponse(response, false, "Database query error: " + e.getMessage());
         }
 
         return response;
@@ -67,8 +67,8 @@ public class UserServices implements IUserServices {
                 response.createResponse(response, false, "user not found");
             }
 
-        } catch (SQLException e) {
-            response.createResponse(response, false, "Database error: " + e.getMessage());
+        } catch (SQLExecutionException e) {
+            response.createResponse(response, false, "Database query error: " + e.getMessage());
         }
 
         return response;
@@ -87,8 +87,8 @@ public class UserServices implements IUserServices {
                 response.createResponse(response, false, "invalid user ID");
             }
 
-        } catch (SQLException e) {
-            response.createResponse(response, false, "Database error: " + e.getMessage());
+        } catch (SQLExecutionException e) {
+            response.createResponse(response, false, "Database query error: " + e.getMessage());
         }
 
         return response;
@@ -106,8 +106,8 @@ public class UserServices implements IUserServices {
             } else {
                 response.createResponse(response, false, "Invalid user ID");
             }
-        } catch (SQLException e) {
-            response.createResponse(response, false, "Database error: " + e.getMessage());
+        } catch (SQLExecutionException e) {
+            response.createResponse(response, false, "Database query error: " + e.getMessage());
         }
 
         return response;

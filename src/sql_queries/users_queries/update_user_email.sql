@@ -1,0 +1,1 @@
+UPDATE users SET Email = ? WHERE UserID = ?;

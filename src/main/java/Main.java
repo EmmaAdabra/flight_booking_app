@@ -8,6 +8,7 @@ public class Main {
         UserDAO userDAO = new UserDAO();
         IUserServices userServices = new UserServices(userDAO);
         UserController controller = new UserController(userServices);
+
 //        create a new user and save to DB
         controller.createUser();
 

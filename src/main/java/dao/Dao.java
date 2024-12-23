@@ -1,13 +1,12 @@
 package dao;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public interface Dao<T> {
-    Optional<T> get(int id) throws SQLException;
-    List<T> getAll() throws SQLException;
-    int save(T t) throws SQLException;
-    int update(Object... params) throws SQLException;
-    int delete(int id) throws SQLException;
+    Optional<T> get(int id) throws SQLExecutionException;
+    List<T> getAll() throws SQLExecutionException;
+    int save(T t) throws SQLExecutionException;
+    int update(Object... params) throws SQLExecutionException;
+    int delete(int id) throws SQLExecutionException;
 }
