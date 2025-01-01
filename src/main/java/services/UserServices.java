@@ -1,7 +1,7 @@
 package services;
 
-import dao.SQLExecutionException;
-import dao.UserDAO;
+import dao.exception.DAOException;
+import dao.user_dao.UserDAO;
 import models.User;
 import utils.ObjectResponse;
 import utils.Response;
@@ -27,9 +27,9 @@ public class UserServices implements IUserServices {
             } else {
                 response.createResponse(response, false, "User couldn't be created");
             }
-        } catch (SQLExecutionException e){
+        } catch (DAOException e){
             response.setStatus(false);
-            response.setMessage("Database query error: " + e.getMessage());
+            response.setMessage("DAO error: " + e.getMessage());
         }
         return response;
     }
@@ -47,8 +47,8 @@ public class UserServices implements IUserServices {
             } else {
                 response.createResponse(response, false, "No users found");
             }
-        } catch (SQLExecutionException e) {
-            response.createResponse(response, false, "Database query error: " + e.getMessage());
+        } catch (DAOException e) {
+            response.createResponse(response, false, "DAO error: " + e.getMessage());
         }
 
         return response;
@@ -67,8 +67,8 @@ public class UserServices implements IUserServices {
                 response.createResponse(response, false, "user not found");
             }
 
-        } catch (SQLExecutionException e) {
-            response.createResponse(response, false, "Database query error: " + e.getMessage());
+        } catch (DAOException e) {
+            response.createResponse(response, false, "DAO error: " + e.getMessage());
         }
 
         return response;
@@ -84,11 +84,11 @@ public class UserServices implements IUserServices {
             if(result > 0){
                 response.createResponse(response, true, "User email updated successfully");
             } else {
-                response.createResponse(response, false, "invalid user ID");
+                response.createResponse(response, false, "Error: invalid user ID");
             }
 
-        } catch (SQLExecutionException e) {
-            response.createResponse(response, false, "Database query error: " + e.getMessage());
+        } catch (DAOException e) {
+            response.createResponse(response, false, "DAO error: " + e.getMessage());
         }
 
         return response;
@@ -104,10 +104,10 @@ public class UserServices implements IUserServices {
             if(result > 0){
                 response.createResponse(response, true, "User deleted successfully");
             } else {
-                response.createResponse(response, false, "Invalid user ID");
+                response.createResponse(response, false, "Error: Invalid user ID");
             }
-        } catch (SQLExecutionException e) {
-            response.createResponse(response, false, "Database query error: " + e.getMessage());
+        } catch (DAOException e) {
+            response.createResponse(response, false, "DAO error: " + e.getMessage());
         }
 
         return response;

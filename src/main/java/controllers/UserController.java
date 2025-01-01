@@ -19,10 +19,10 @@ public class UserController {
     public void createUser(){
 //        test user
         var newUser = new User(
-                "Jonathan",
-                "Ajayi",
-                "ajayi@gmail.com",
-                Role.ADMIN
+                "Nsisong",
+                "Umanah",
+                "nsisong@gmail.com",
+                Role.USER
         );
 
         Response createUserResponse = userServices.createUser(newUser);

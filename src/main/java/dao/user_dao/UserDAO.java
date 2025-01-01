@@ -1,5 +1,8 @@
-package dao;
+package dao.user_dao;
 
+import dao.CreateConnection;
+import dao.Dao;
+import dao.exception.DAOException;
 import models.User;
 import utils.EntityModelMapper;
 import utils.GetSqlQueryUtil;
@@ -12,17 +15,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserDAO implements Dao<User> {
-    private final String USER_SQL_QUERY_SCRIPT_DIR = "src/sql_queries/users_queries/";
     @Override
 //    get a user from database by ID
-    public Optional<User> get(int id) throws SQLExecutionException {
+    public Optional<User> get(int id) throws DAOException {
         String mysqlQuery;
         User user = null;
 
         try {
-            mysqlQuery = GetSqlQueryUtil.buildSqlQuery(USER_SQL_QUERY_SCRIPT_DIR + "get_user_by_id.sql");
+            mysqlQuery = GetSqlQueryUtil.buildSqlQuery(UsersSqlQueriesFilePaths.GET_USER_BY_ID.getPath());
         } catch (IOException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException("Failed to load sql query for getting user by ID:\n" + e.getMessage(), e);
         }
 
         try(Connection connection = CreateConnection.getConnection();
@@ -35,7 +37,7 @@ public class UserDAO implements Dao<User> {
                 }
             }
         } catch (SQLException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException("Error executing get user by ID query:\n" + e.getMessage(), e);
         }
 
         return Optional.ofNullable(user);
@@ -44,14 +46,14 @@ public class UserDAO implements Dao<User> {
 
 //    get all registered user
     @Override
-    public List<User> getAll() throws SQLExecutionException {
+    public List<User> getAll() throws DAOException {
         List<User> users = new ArrayList<>();
         String mysqlQuery;
 
         try{
-            mysqlQuery = GetSqlQueryUtil.buildSqlQuery(USER_SQL_QUERY_SCRIPT_DIR + "get_all_users.sql");
+            mysqlQuery = GetSqlQueryUtil.buildSqlQuery(UsersSqlQueriesFilePaths.GET_ALL_USERS.getPath());
         } catch (IOException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException("Failed to load sql query for getting all users:\n" + e.getMessage(), e);
         }
 
 
@@ -64,7 +66,7 @@ public class UserDAO implements Dao<User> {
                 }
             }
         } catch (SQLException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException("Error in executing get all users query:\n" + e.getMessage(), e);
         }
 
         return users;
@@ -72,15 +74,14 @@ public class UserDAO implements Dao<User> {
 
 //    insert new user record
     @Override
-    public int save(User user) throws SQLExecutionException {
-        final String  SQL_SCRIPT_PATH = USER_SQL_QUERY_SCRIPT_DIR + "insert_user_record.sql";
+    public int save(User user) throws DAOException {
         int rowInserted;
         String sqlQuery;
 
         try {
-            sqlQuery = GetSqlQueryUtil.buildSqlQuery(SQL_SCRIPT_PATH);
+            sqlQuery = GetSqlQueryUtil.buildSqlQuery(UsersSqlQueriesFilePaths.INSERT_USER_RECORD.getPath());
         } catch (IOException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException("Failed to load sql query for inserting user record:\n" + e.getMessage(), e);
         }
 
         try(Connection connection = CreateConnection.getConnection();
@@ -95,7 +96,7 @@ public class UserDAO implements Dao<User> {
 
             rowInserted = preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException("Failed to insert user record:\n" + e.getMessage(), e);
         }
 
         return rowInserted;
@@ -104,15 +105,15 @@ public class UserDAO implements Dao<User> {
 
 //    update user email
     @Override
-    public int update(Object... params) throws SQLExecutionException {
+    public int update(Object... params) throws DAOException {
         int rowUpdated;
         String mysqlQuery;
 
         try{
             mysqlQuery = GetSqlQueryUtil
-                    .buildSqlQuery(USER_SQL_QUERY_SCRIPT_DIR + "update_user_email.sql");
+                    .buildSqlQuery(UsersSqlQueriesFilePaths.UPDATE_USER_EMAIL.getPath());
         } catch (IOException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException("Error in loading update user email query script:\n" + e.getMessage(), e);
         }
 
         try(Connection connection = CreateConnection.getConnection();
@@ -121,7 +122,7 @@ public class UserDAO implements Dao<User> {
 
             rowUpdated = preparedStatement.executeUpdate();
         } catch (SQLException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
 
         return rowUpdated;
@@ -130,15 +131,15 @@ public class UserDAO implements Dao<User> {
 
 //    delete user record
     @Override
-    public int delete(int userID) throws SQLExecutionException{
+    public int delete(int userID) throws DAOException {
         int deletedRow;
         String mysqlQuery;
 
         try{
             mysqlQuery = GetSqlQueryUtil
-                    .buildSqlQuery(USER_SQL_QUERY_SCRIPT_DIR + "delete_user.sql");
+                    .buildSqlQuery(UsersSqlQueriesFilePaths.DELETE_USER.getPath());
         } catch (IOException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
 
         try(Connection connection = CreateConnection.getConnection();
@@ -148,7 +149,7 @@ public class UserDAO implements Dao<User> {
             deletedRow = preparedStatement.executeUpdate();
 
         } catch (SQLException e){
-            throw new SQLExecutionException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
 
         return deletedRow;

@@ -1,5 +1,5 @@
 import controllers.UserController;
-import dao.UserDAO;
+import dao.user_dao.UserDAO;
 import services.IUserServices;
 import services.UserServices;
 
