@@ -8,7 +8,7 @@ public enum UsersSqlQueriesFilePaths {
     DELETE_USER(get_userQueriesDir() + "delete_user.sql");
 
     private static final String USERS_QUERIES_DIR = "src/sql_queries/users_queries/";
-    private String path;
+    private final String path;
 
     UsersSqlQueriesFilePaths(String path) {
         this.path = path;
