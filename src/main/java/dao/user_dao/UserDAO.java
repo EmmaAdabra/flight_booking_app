@@ -4,9 +4,12 @@ import dao.CreateConnection;
 import dao.Dao;
 import dao.exception.DAOException;
 import models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.EntityModelMapper;
 import utils.GetSqlQueryUtil;
 import utils.PreparedStatementUtils;
+import utils.StringUtility;
 
 import java.io.IOException;
 import java.sql.*;
@@ -14,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDAO implements Dao<User> {
+public class UserDAO implements IUserDAO {
+    Logger logger = LoggerFactory.getLogger(UserDAO.class);
     @Override
 //    get a user from database by ID
     public Optional<User> get(int id) throws DAOException {
@@ -43,8 +47,7 @@ public class UserDAO implements Dao<User> {
         return Optional.ofNullable(user);
     }
 
-
-//    get all registered user
+    //    get all registered user
     @Override
     public List<User> getAll() throws DAOException {
         List<User> users = new ArrayList<>();
@@ -77,15 +80,22 @@ public class UserDAO implements Dao<User> {
     public int save(User user) throws DAOException {
         int rowInserted;
         String sqlQuery;
+        String maskedEmail = StringUtility.maskEmail(user.getEmail());
 
+
+        logger.debug("Fetching insert user query from {}", UsersSqlQueriesFilePaths.INSERT_USER_RECORD.getPath());
         try {
             sqlQuery = GetSqlQueryUtil.buildSqlQuery(UsersSqlQueriesFilePaths.INSERT_USER_RECORD.getPath());
         } catch (IOException e){
+            logger.error("Failed to get insert user query from {}",
+                    UsersSqlQueriesFilePaths.INSERT_USER_RECORD.getPath(), e);
             throw new DAOException("Failed to load sql query for inserting user record:\n" + e.getMessage(), e);
         }
 
+        logger.debug("Creating database connection");
         try(Connection connection = CreateConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)){
+            logger.debug("Database connection created");
             PreparedStatementUtils.setParameters(
                 preparedStatement,
                 user.getFirstName(),
@@ -95,7 +105,9 @@ public class UserDAO implements Dao<User> {
             );
 
             rowInserted = preparedStatement.executeUpdate();
+            logger.debug("Insert user query successfully executed");
         } catch (SQLException e) {
+            logger.error("Database error occurred trying to insert user");
             throw new DAOException("Failed to insert user record:\n" + e.getMessage(), e);
         }
 
