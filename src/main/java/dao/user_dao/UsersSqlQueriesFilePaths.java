@@ -4,6 +4,7 @@ public enum UsersSqlQueriesFilePaths {
     INSERT_USER_RECORD(get_userQueriesDir() + "insert_user_record.sql"),
     GET_ALL_USERS(get_userQueriesDir() + "get_all_users.sql"),
     GET_USER_BY_ID(get_userQueriesDir() + "get_user_by_id.sql"),
+    GET_USER_ID(get_userQueriesDir() + "get_user_id.sql"),
     UPDATE_USER_EMAIL(get_userQueriesDir() + "update_user_email.sql"),
     DELETE_USER(get_userQueriesDir() + "delete_user.sql");
 
